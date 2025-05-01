@@ -8,7 +8,7 @@ const Banner: React.FC = () => {
   const handleSearch = () => {
     if (!query.trim()) return;
   
-    fetch(`https://music-langchain-ebbd399f0b6a.herokuapp.com/search?q=${encodeURIComponent(query)}`)
+    fetch(`https://music-search-langchain-f613d142ae31.herokuapp.com/search?q=${encodeURIComponent(query)}`)
       .then((res) => res.json())
       .then((data) => {
         console.log('🎶 Resultado:', data);
