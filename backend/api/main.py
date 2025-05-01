@@ -24,7 +24,6 @@ app.add_middleware(
         "https://music-search-liart.vercel.app",
         "https://music-search-git-main-lmgaspas-projects.vercel.app",
         "https://music-search-langchain.vercel.app",
-        "*"
     ],
     allow_credentials=True,
     allow_methods=["*"],
