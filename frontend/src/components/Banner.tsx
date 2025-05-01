@@ -1,6 +1,6 @@
 // src/components/Banner.tsx
 import React, { useState } from 'react';
-import './Banner.css';
+import './banner.css';
 
 const Banner: React.FC = () => {
   const [query, setQuery] = useState('');
