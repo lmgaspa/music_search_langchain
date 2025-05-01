@@ -1,0 +1,12 @@
+# Ignore environment variables
+.env
+
+# Python-related
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Streamlit cache
+.streamlit/
+.txt
