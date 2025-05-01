@@ -22,7 +22,9 @@ app.add_middleware(
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "https://music-search-liart.vercel.app",
-        "https://music-search-git-main-lmgaspas-projects.vercel.app"
+        "https://music-search-git-main-lmgaspas-projects.vercel.app",
+        "https://music-search-langchain.vercel.app",
+        "*"
     ],
     allow_credentials=True,
     allow_methods=["*"],
