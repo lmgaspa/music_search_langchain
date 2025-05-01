@@ -1,36 +1,40 @@
-import React, { useState } from 'react';
-import './Banner.css';
+import React, { useState } from "react";
+import "./Banner.css";
+
+interface Result {
+  thumbnail: string;
+  title: string;
+  channel: string;
+  url: string;
+}
 
 const Banner: React.FC = () => {
-  const [query, setQuery] = useState('');
-  interface Result {
-    thumbnail: string;
-    title: string;
-    channel: string;
-    url: string;
-  }
-
+  const [query, setQuery] = useState("");
   const [results, setResults] = useState<Result[]>([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleSearch = () => {
     if (!query.trim()) return;
 
-    fetch(`https://music-search-langchain-f613d142ae31.herokuapp.com/search?q=${encodeURIComponent(query)}`)
+    fetch(
+      `https://music-search-langchain-f613d142ae31.herokuapp.com/search?q=${encodeURIComponent(
+        query
+      )}`
+    )
       .then((res) => res.json())
       .then((data) => {
-        console.log('🎶 Resultado:', data);
+        console.log("🎶 Resultado:", data);
         if (data.results?.error) {
           setError(data.results.error);
           setResults([]);
         } else {
-          setError('');
-          setResults(data.results);
+          setError("");
+          setResults(data.results.slice(0, 8)); // Limita a 8 vídeos
         }
       })
       .catch((err) => {
-        console.error('Erro ao buscar:', err);
-        setError('Erro ao buscar músicas');
+        console.error("Erro ao buscar:", err);
+        setError("Erro ao buscar músicas");
         setResults([]);
       });
   };
@@ -46,7 +50,7 @@ const Banner: React.FC = () => {
             placeholder="Digite aqui sua busca..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
           />
           <button className="btn btn-primary" onClick={handleSearch}>
             Buscar
@@ -55,28 +59,23 @@ const Banner: React.FC = () => {
 
         {error && <p className="text-danger mt-3">{error}</p>}
 
-        {/* Resultados */}
-        <div className="row mt-4">
-          {results.map((item, index) => (
-            <div className="col-md-4 mb-4" key={index}>
-              <div className="card h-100">
-                <img src={item.thumbnail} className="card-img-top" alt={item.title} />
-                <div className="card-body">
-                  <h5 className="card-title">{item.title}</h5>
-                  <p className="card-text text-muted">{item.channel}</p>
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-outline-primary"
-                  >
-                    Assistir no YouTube
-                  </a>
-                </div>
+        {results.length > 0 && (
+          <div className="video-grid mt-4 container">
+            {results.map((video, index) => (
+              <div key={index} className="video-card">
+                <a href={video.url} target="_blank" rel="noopener noreferrer">
+                  <img
+                    src={video.thumbnail}
+                    alt={video.title}
+                    className="img-fluid"
+                  />
+                  <h5 className="mt-2">{video.title}</h5>
+                  <p className="text-muted">{video.channel}</p>
+                </a>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
