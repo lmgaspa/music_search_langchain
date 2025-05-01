@@ -1,83 +1,104 @@
-import React, { useState } from "react";
-import "./Banner.css";
+import React, { useState } from 'react';
+import './Banner.css';
 
-interface Result {
-  thumbnail: string;
+interface Video {
   title: string;
-  channel: string;
   url: string;
+  channel: string;
+  thumbnail?: string;
 }
 
 const Banner: React.FC = () => {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<Result[]>([]);
-  const [error, setError] = useState("");
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<Video[]>([]);
+  const [showResults, setShowResults] = useState(false);
 
   const handleSearch = () => {
     if (!query.trim()) return;
 
-    fetch(
-      `https://music-search-langchain-f613d142ae31.herokuapp.com/search?q=${encodeURIComponent(
-        query
-      )}`
-    )
+    fetch(`https://music-search-langchain-f613d142ae31.herokuapp.com/search?q=${encodeURIComponent(query)}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("🎶 Resultado:", data);
-        if (data.results?.error) {
-          setError(data.results.error);
-          setResults([]);
-        } else {
-          setError("");
-          setResults(data.results.slice(0, 8)); // Limita a 8 vídeos
-        }
+        console.log('🎶 Resultado:', data);
+        setResults(data.results || []);
+        setShowResults(true);
       })
       .catch((err) => {
-        console.error("Erro ao buscar:", err);
-        setError("Erro ao buscar músicas");
+        console.error('Erro ao buscar:', err);
         setResults([]);
+        setShowResults(false);
       });
   };
 
   return (
-    <div className="banner">
-      <div className="overlay">
-        <h1 className="fw-bold">Busque sua música favorita</h1>
-        <div className="input-group mt-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Digite aqui sua busca..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-          />
-          <button className="btn btn-primary" onClick={handleSearch}>
-            Buscar
-          </button>
-        </div>
+    <>
+      {/* Banner com input */}
+      <div className="banner bg-dark text-white py-5">
+        <div className="container">
+          <h1 className="fw-bold text-center mb-4">Busque sua música favorita</h1>
 
-        {error && <p className="text-danger mt-3">{error}</p>}
-
-        {results.length > 0 && (
-          <div className="video-grid mt-4 container">
-            {results.map((video, index) => (
-              <div key={index} className="video-card">
-                <a href={video.url} target="_blank" rel="noopener noreferrer">
-                  <img
-                    src={video.thumbnail}
-                    alt={video.title}
-                    className="img-fluid"
-                  />
-                  <h5 className="mt-2">{video.title}</h5>
-                  <p className="text-muted">{video.channel}</p>
-                </a>
-              </div>
-            ))}
+          {/* Input centralizado e responsivo */}
+          <div className="d-flex justify-content-center">
+            <div className="input-group" style={{ maxWidth: '600px', width: '100%' }}>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Digite aqui sua busca..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+              />
+              <button className="btn btn-primary" onClick={handleSearch}>
+                Buscar
+              </button>
+            </div>
           </div>
-        )}
+        </div>
       </div>
-    </div>
+
+      {/* Resultados fora do banner */}
+      {showResults && (
+        <div className="container my-5">
+          {results.length > 0 ? (
+            <>
+              <h3 className="text-center mb-4">Resultados encontrados:</h3>
+              <div className="row g-4">
+                {results.map((video, index) => (
+                  <div key={index} className="col-sm-6 col-md-4 col-lg-3">
+                    <div className="card h-100 shadow-sm">
+                      {video.thumbnail && (
+                        <img
+                          src={video.thumbnail}
+                          className="card-img-top"
+                          alt={video.title}
+                          style={{ height: '180px', objectFit: 'cover' }}
+                        />
+                      )}
+                      <div className="card-body d-flex flex-column">
+                        <h6 className="card-title">{video.title}</h6>
+                        <p className="card-text text-muted">
+                          Canal: <strong>{video.channel}</strong>
+                        </p>
+                        <a
+                          href={video.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-outline-primary btn-sm mt-auto"
+                        >
+                          Assistir no YouTube
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <p className="text-center">Nenhum resultado encontrado.</p>
+          )}
+        </div>
+      )}
+    </>
   );
 };
 
