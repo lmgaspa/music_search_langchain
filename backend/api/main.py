@@ -15,7 +15,6 @@ if not YOUTUBE_API_KEY:
 # Inicializar o app
 app = FastAPI()
 
-# Configurar CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
