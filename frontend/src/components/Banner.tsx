@@ -35,7 +35,7 @@ const Banner: React.FC = () => {
       {/* Banner com input */}
       <div className="banner bg-dark text-white py-5">
         <div className="container">
-          <h1 className="fw-bold text-center mb-4">Search for your favorite music 🎵</h1>
+          <h1 className="fw-bold text-center mb-4">Search for your favorite music</h1>
 
           {/* Input centralizado e responsivo */}
           <div className="d-flex justify-content-center">
@@ -43,7 +43,7 @@ const Banner: React.FC = () => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Digite aqui sua busca..."
+                placeholder="Search for your favorite music 🎵"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
