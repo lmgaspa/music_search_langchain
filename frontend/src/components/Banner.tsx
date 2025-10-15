@@ -16,7 +16,7 @@ const Banner: React.FC = () => {
   const handleSearch = () => {
     if (!query.trim()) return;
 
-    fetch(`https://music-search-langchain.onrender.com//search?q=${encodeURIComponent(query)}`)
+    fetch(`https://music-search-langchain.onrender.com/search?q=${encodeURIComponent(query)}`)
       .then((res) => res.json())
       .then((data) => {
         console.log('🎶 Resultado:', data);
@@ -49,7 +49,7 @@ const Banner: React.FC = () => {
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               />
               <button className="btn btn-primary" onClick={handleSearch}>
-                Buscar
+                Search
               </button>
             </div>
           </div>
