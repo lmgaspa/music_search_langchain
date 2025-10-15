@@ -14,8 +14,6 @@ const App: React.FC = () => {
           <p className="lead mt-3">
             With LangChain technology and YouTube integration, you can find music in a smart, fast, and fun way.
           </p>
-          <p>⚡ Powered by °AndesCore Software. 2025</p>
-          <p>Email: andescoresoftware@gmail.com</p>
         </section>
 
         <section className="section bg-light text-center py-0">
@@ -34,6 +32,10 @@ const App: React.FC = () => {
               <p>Searches tailored to your musical taste.</p>
             </div>
           </div>
+          </section>
+           <section className="section text-center py-2">
+            <p>⚡ Powered by °AndesCore Software. 2025</p>
+          <p>✉️ Email: andescoresoftware@gmail.com</p>
         </section>
       </main>
     </div>
