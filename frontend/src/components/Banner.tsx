@@ -16,7 +16,7 @@ const Banner: React.FC = () => {
   const handleSearch = () => {
     if (!query.trim()) return;
 
-    fetch(`https://musicsearchlangchain-d42cb3d95536.herokuapp.com/search?q=${encodeURIComponent(query)}`)
+    fetch(`https://music-search-langchain.onrender.com//search?q=${encodeURIComponent(query)}`)
       .then((res) => res.json())
       .then((data) => {
         console.log('🎶 Resultado:', data);
@@ -35,7 +35,7 @@ const Banner: React.FC = () => {
       {/* Banner com input */}
       <div className="banner bg-dark text-white py-5">
         <div className="container">
-          <h1 className="fw-bold text-center mb-4">Busque sua música favorita</h1>
+          <h1 className="fw-bold text-center mb-4">Search for your favorite music 🎵</h1>
 
           {/* Input centralizado e responsivo */}
           <div className="d-flex justify-content-center">
