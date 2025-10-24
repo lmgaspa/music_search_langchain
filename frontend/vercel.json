@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://music-search-langchain.onrender.com/:path*"
+      "destination": "https://music-search-langchain.onrender.com/api/:path*"
     },
     {
       "source": "/(.*)",

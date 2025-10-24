@@ -8,8 +8,8 @@ export default defineConfig({
       '/api': {
         target: 'https://music-search-langchain.onrender.com',
         changeOrigin: true,
-        // strip the /api prefix -> backend sees /xxx
-        rewrite: (path) => path.replace(/^\/api/, ''),
+        // keep the /api prefix -> backend sees /api/xxx
+        rewrite: (path) => path,
         ws: true,
         xfwd: true,
         timeout: 60_000,

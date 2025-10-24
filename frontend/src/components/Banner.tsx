@@ -23,16 +23,10 @@ const Banner: React.FC = () => {
     setShowResults(false);
 
     try {
-      // Try the proxy first (Vercel -> Render)
-      let baseUrl = '/api';
-      let response = await fetch(`${baseUrl}/search?q=${encodeURIComponent(query)}`);
-      
-      // If proxy fails, try direct Render URL as fallback
-      if (!response.ok && response.status === 404) {
-        console.log('Proxy failed, trying direct Render URL...');
-        baseUrl = 'https://music-search-langchain.onrender.com';
-        response = await fetch(`${baseUrl}/search?q=${encodeURIComponent(query)}`);
-      }
+      // Use environment variables for API configuration
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://music-search-langchain.onrender.com';
+      const endpoint = import.meta.env.VITE_API_ENDPOINT || '/api/search';
+      const response = await fetch(`${baseUrl}${endpoint}?q=${encodeURIComponent(query)}`);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

@@ -77,7 +77,7 @@ def search_music_youtube(query: str, max_results: int = 15):
 
 # Main search route
 @api_router.get("/search")
-def search_route(q: str = Query(..., description="Song query!"), max_results: int = 15):
+def search_route(q: str = Query(..., description="Song query!"), max_results: int = 12):
     logger.info(f"Search request received: query='{q}', max_results={max_results}")
     if not q.strip():
         logger.warning("Empty query parameter received")
