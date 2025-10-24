@@ -20,9 +20,12 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",
-        "https://music-search-langchain.vercel.app",
-        "https://musicsearchlangchain-44fe7a21593b.herokuapp.com",  # Add your own domain
+        "http://localhost:5173",  # Frontend local
+        "http://localhost:3000",  # Alternativo
+        "https://music-search-langchain.vercel.app",  # Frontend produção
+        "https://occultastro77.com",  # Domínio produção
+        "https://www.occultastro77.com",  # Domínio produção com www
+        "https://musicsearchlangchain-44fe7a21593b.herokuapp.com",  # Backend próprio
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
