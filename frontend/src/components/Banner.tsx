@@ -23,10 +23,8 @@ const Banner: React.FC = () => {
     setShowResults(false);
 
     try {
-      // Use proxy in development, direct URL in production
-      const baseUrl = import.meta.env.DEV 
-        ? '/api' 
-        : 'https://musicsearchlangchain-44fe7a21593b.herokuapp.com';
+      // Use proxy for both development and production
+      const baseUrl = '/api';
       
       const response = await fetch(`${baseUrl}/search?q=${encodeURIComponent(query)}`);
       
