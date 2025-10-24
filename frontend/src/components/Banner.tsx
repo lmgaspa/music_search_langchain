@@ -16,7 +16,7 @@ const Banner: React.FC = () => {
   const handleSearch = () => {
     if (!query.trim()) return;
 
-    fetch(`https://music-search-langchain.onrender.com/search?q=${encodeURIComponent(query)}`)
+    fetch(`https://musicsearchlangchain-44fe7a21593b.herokuapp.com/search?q=${encodeURIComponent(query)}`)
       .then((res) => res.json())
       .then((data) => {
         console.log('🎶 Resultado:', data);
