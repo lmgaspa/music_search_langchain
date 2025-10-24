@@ -23,10 +23,16 @@ const Banner: React.FC = () => {
     setShowResults(false);
 
     try {
-      // Use proxy for both development and production
-      const baseUrl = '/api';
+      // Try the proxy first (Vercel -> Render)
+      let baseUrl = '/api';
+      let response = await fetch(`${baseUrl}/search?q=${encodeURIComponent(query)}`);
       
-      const response = await fetch(`${baseUrl}/search?q=${encodeURIComponent(query)}`);
+      // If proxy fails, try direct Render URL as fallback
+      if (!response.ok && response.status === 404) {
+        console.log('Proxy failed, trying direct Render URL...');
+        baseUrl = 'https://music-search-langchain.onrender.com';
+        response = await fetch(`${baseUrl}/search?q=${encodeURIComponent(query)}`);
+      }
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -90,7 +96,12 @@ const Banner: React.FC = () => {
             <strong>Erro ao buscar música:</strong> {error}
             <br />
             <small>
-              Possíveis causas: Servidor indisponível, problema de CORS, ou conexão com a internet.
+              Possíveis causas: 
+              <br />• Backend Render indisponível ou em manutenção
+              <br />• Problema de conectividade com a internet
+              <br />• Configuração de proxy do Vercel
+              <br />
+              <br />Tente novamente em alguns minutos ou verifique se o backend está funcionando.
             </small>
           </div>
         </div>

@@ -1,31 +1,32 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
       '/api': {
-        target: 'https://musicsearchlangchain-44fe7a21593b.herokuapp.com',
+        target: 'https://music-search-langchain.onrender.com',
         changeOrigin: true,
+        // strip the /api prefix -> backend sees /xxx
         rewrite: (path) => path.replace(/^\/api/, ''),
-        secure: true,
-        configure: (proxy, _options) => {
-          proxy.on('error', (err, _req, _res) => {
-            // eslint-disable-next-line no-console
-            console.log('proxy error', err);
-          });
-          proxy.on('proxyReq', (_proxyReq, req, _res) => {
-            // eslint-disable-next-line no-console
-            console.log('Sending Request to the Target:', req.method, req.url);
-          });
-          proxy.on('proxyRes', (proxyRes, req, _res) => {
-            // eslint-disable-next-line no-console
-            console.log('Received Response from the Target:', proxyRes.statusCode, req.url);
-          });
+        ws: true,
+        xfwd: true,
+        timeout: 60_000,
+        proxyTimeout: 60_000,
+        secure: true, // Render uses valid certs; set false only for self-signed
+        configure: (proxy) => {
+          proxy.on('error', (err) => {
+            console.log('proxy error', err)
+          })
+          proxy.on('proxyReq', (_, req) => {
+            console.log('Sending Request to the Target:', req.method, req.url)
+          })
+          proxy.on('proxyRes', (proxyRes, req) => {
+            console.log('Received Response from the Target:', proxyRes.statusCode, req.url)
+          })
         },
-      }
-    }
-  }
+      },
+    },
+  },
 })
