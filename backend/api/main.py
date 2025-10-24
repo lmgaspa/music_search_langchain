@@ -3,6 +3,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from googleapiclient.discovery import build
 from dotenv import load_dotenv
 import os
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Load environment variables
 load_dotenv()
@@ -17,14 +22,16 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "https://music-search-langchain.vercel.app",
+        "https://musicsearchlangchain-44fe7a21593b.herokuapp.com",  # Add your own domain
     ],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
 def ensure_api_key():
     if not YOUTUBE_API_KEY:
+        logger.error("API_KEY is missing from the environment")
         raise HTTPException(status_code=500, detail="API_KEY is missing from the environment.")
 
 # Function to search for songs on YouTube
@@ -59,17 +66,39 @@ def search_music_youtube(query: str, max_results: int = 15):
         return music_results
 
     except Exception as e:
+        logger.error(f"YouTube API error: {str(e)}")
         # return a clear HTTP error to the client
         raise HTTPException(status_code=502, detail=f"YouTube error: {e}")
 
 # Main search route
 @app.get("/search")
 def search_route(q: str = Query(..., description="Song query!"), max_results: int = 15):
+    logger.info(f"Search request received: query='{q}', max_results={max_results}")
     if not q.strip():
+        logger.warning("Empty query parameter received")
         raise HTTPException(status_code=400, detail="Parameter q is required.")
-    return {"results": search_music_youtube(q.strip(), max_results=max_results)}
+    
+    try:
+        results = search_music_youtube(q.strip(), max_results=max_results)
+        logger.info(f"Search completed successfully: {len(results)} results found")
+        return {"results": results}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Unexpected error in search route: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
-# Health route (for curl testing)
+# Health route (for monitoring)
 @app.get("/health")
 def health_check():
-    return {"status": "ok", "api_key_present": bool(YOUTUBE_API_KEY)}
+    logger.info("Health check requested")
+    return {
+        "status": "ok", 
+        "api_key_present": bool(YOUTUBE_API_KEY),
+        "environment": "production" if os.getenv("PORT") else "development"
+    }
+
+# Root route for basic connectivity test
+@app.get("/")
+def root():
+    return {"message": "Music Search API is running", "version": "1.0.0"}
