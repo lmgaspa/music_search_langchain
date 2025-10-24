@@ -14,8 +14,12 @@ load_dotenv()
 
 YOUTUBE_API_KEY = os.getenv("API_KEY")
 
-# Initialize the app (without SystemExit)
+# Initialize the app with API prefix
 app = FastAPI()
+
+# Create API router with prefix
+from fastapi import APIRouter
+api_router = APIRouter(prefix="/api")
 
 app.add_middleware(
     CORSMiddleware,
@@ -74,7 +78,7 @@ def search_music_youtube(query: str, max_results: int = 15):
         raise HTTPException(status_code=502, detail=f"YouTube error: {e}")
 
 # Main search route
-@app.get("/search")
+@api_router.get("/search")
 def search_route(q: str = Query(..., description="Song query!"), max_results: int = 15):
     logger.info(f"Search request received: query='{q}', max_results={max_results}")
     if not q.strip():
@@ -92,7 +96,7 @@ def search_route(q: str = Query(..., description="Song query!"), max_results: in
         raise HTTPException(status_code=500, detail="Internal server error")
 
 # Health route (for monitoring)
-@app.get("/health")
+@api_router.get("/health")
 def health_check():
     logger.info("Health check requested")
     return {
@@ -105,3 +109,6 @@ def health_check():
 @app.get("/")
 def root():
     return {"message": "Music Search API is running", "version": "1.0.0"}
+
+# Include the API router
+app.include_router(api_router)
