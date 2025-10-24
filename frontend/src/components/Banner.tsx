@@ -12,22 +12,40 @@ const Banner: React.FC = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Video[]>([]);
   const [showResults, setShowResults] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (!query.trim()) return;
 
-    fetch(`https://musicsearchlangchain-44fe7a21593b.herokuapp.com/search?q=${encodeURIComponent(query)}`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log('🎶 Resultado:', data);
-        setResults(data.results || []);
-        setShowResults(true);
-      })
-      .catch((err) => {
-        console.error('Erro ao buscar:', err);
-        setResults([]);
-        setShowResults(false);
-      });
+    setLoading(true);
+    setError(null);
+    setShowResults(false);
+
+    try {
+      // Use proxy in development, direct URL in production
+      const baseUrl = import.meta.env.DEV 
+        ? '/api' 
+        : 'https://musicsearchlangchain-44fe7a21593b.herokuapp.com';
+      
+      const response = await fetch(`${baseUrl}/search?q=${encodeURIComponent(query)}`);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log('🎶 Resultado:', data);
+      setResults(data.results || []);
+      setShowResults(true);
+    } catch (err) {
+      console.error('Erro ao buscar:', err);
+      setError(err instanceof Error ? err.message : 'Erro desconhecido ao buscar música');
+      setResults([]);
+      setShowResults(false);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -48,13 +66,37 @@ const Banner: React.FC = () => {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               />
-              <button className="btn btn-primary" onClick={handleSearch}>
-                Search
+              <button 
+                className="btn btn-primary" 
+                onClick={handleSearch}
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Searching...
+                  </>
+                ) : (
+                  'Search'
+                )}
               </button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Error message */}
+      {error && (
+        <div className="container my-3">
+          <div className="alert alert-danger text-center" role="alert">
+            <strong>Erro ao buscar música:</strong> {error}
+            <br />
+            <small>
+              Possíveis causas: Servidor indisponível, problema de CORS, ou conexão com a internet.
+            </small>
+          </div>
+        </div>
+      )}
 
       {/* Resultados fora do banner */}
       {showResults && (
