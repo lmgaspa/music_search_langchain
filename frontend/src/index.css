@@ -3,9 +3,10 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* força modo claro */
+  color-scheme: light;
+  color: #0a0a0a; /* texto bem escuro */
+  background-color: #76b6f5; /* quase branco */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,13 +14,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+bg-lightblue {
+  background-color: #425969; /* azul bebê bem clarinho */
+}
+
 a {
   font-weight: 500;
-  color: #646cff;
+  color: #1e40af; /* azul médio */
   text-decoration: inherit;
 }
+
 a:hover {
-  color: #535bf2;
+  color: #1e3a8a; /* azul um pouco mais escuro */
 }
 
 body {
@@ -28,51 +34,70 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #0f766e 50%, #1e40af 75%, #581c87 100%);
+
+  /* fundo claro suave indo pro azul claro */
+  background: radial-gradient(
+      circle at 20% 20%,
+      rgba(157, 174, 185, 0.9) 0%,   /* azul bebê bem clarinho (#e0f2fe) */
+      #7881b6 40%,    /* branco */
+      rgba(82, 120, 168, 0.6) 100%  /* cinza-azulado pastel (#e2e8f0) */
+  );
   background-attachment: fixed;
-  background-size: 400% 400%;
-  animation: gradient-shift 15s ease infinite;
+  background-size: 200% 200%;
+  animation: gradient-shift 12s ease-in-out infinite;
 }
 
 @keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0%   { background-position: 0% 0%; }
+  50%  { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  color: #919db8; /* cinza-azul bem escuro, quase preto */
 }
 
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
+  border: 1px solid rgba(15, 23, 42, 0.15); /* borda cinza-azul transparente */
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+
+  background-color: #1932a0; /* botão claro */
+  color: #0f172a;            /* texto escuro */
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: all 0.25s;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06),
+              0 2px 4px rgba(15, 23, 42, 0.04);
 }
+
 button:hover {
-  border-color: #646cff;
+  border-color: #38bdf8;          /* azul claro (#38bdf8) */
+  box-shadow: 0 10px 28px rgba(56, 189, 248, 0.18),
+              0 2px 4px rgba(15, 23, 42, 0.06);
+  background-color: #f0f9ff;      /* leve azul clarinho */
 }
+
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: 4px auto rgba(56, 189, 248, 0.5); /* foco acessível azul claro */
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    color: #0a0a0a;
+    background-color: #f8fafc;
   }
+
   a:hover {
-    color: #747bff;
+    color: #1e3a8a;
   }
+
   button {
-    background-color: #f9f9f9;
+    background-color: #ffffff;
   }
 }
