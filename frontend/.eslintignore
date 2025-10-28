@@ -3,3 +3,5 @@ eslint.config.js
 node_modules
 dist
 build
+
+.env
